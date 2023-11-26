@@ -1,0 +1,47 @@
+.button-style {
+    border: none;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background-color: transparent;
+  }
+  
+  .button-style:hover {
+    background-color: transparent;
+  }
+
+  .form-signin {
+    background-color: #f8f9fa; /* Màu nền của form */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-signin h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #007bff; /* Màu chữ cho tiêu đề */
+  }
+  
+  .form-control {
+    margin-bottom: 15px;
+  }
+  
+  .position-relative {
+    margin-bottom: 20px;
+  }
+  
+  .checkbox {
+    margin-bottom: 15px;
+  }
+  
+  .btn-primary {
+    background-color: #007bff; /* Màu nền của nút đăng nhập */
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3; /* Màu nền của nút đăng nhập khi hover */
+  }
