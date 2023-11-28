@@ -6,7 +6,7 @@ import HinHAnhModel from "../../models/HinhAnhModel";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Option } from "react-bootstrap-icons";
+import { Option, Record2 } from "react-bootstrap-icons";
 import { Form } from "react-bootstrap";
 export interface CartItem {
   maSach?: any;
@@ -23,6 +23,18 @@ const Cart: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("");
+  const [diaChiGiaoHang, setDiaChiGiaoHang] = useState("");
+  const [clickGiaoHang, setclickGiaoHang] = useState<string | undefined>(undefined);
+  const [totalAmountUpdate, setTotalAmountUpdate] = useState(0);
+  
+  const handleGiaoHang = (value: string) => {
+   
+    const giaGiaoHang= value === "1" ? 10000 : 0;
+    setclickGiaoHang(giaGiaoHang.toString());
+    const updatedTotalAmount = totalAmount + giaGiaoHang;
+    setTotalAmountUpdate(updatedTotalAmount);
+  };
+  
 
   const showModal = () => {
     const cartItems = Cookies.get('cartItems'); 
@@ -33,7 +45,7 @@ const Cart: React.FC = () => {
       Swal.fire({
         title: "Bạn chưa có sản phẩm nào trong giỏ hàng!",
         icon: "warning",
-        showCancelButton: true,
+        showCancelButton: false,
         confirmButtonColor: "#d33",
         cancelButtonColor: "#3085d6",
         confirmButtonText: "OK",
@@ -45,9 +57,49 @@ const Cart: React.FC = () => {
       });
     }
   };
+
+  useEffect(() => {
+    const userName = localStorage.getItem('user');
+    
+    if (userName !== null) {
+      const fetchData = async () => {
+        try {
+          
+          const api = `http://localhost:8080/tai-khoan/check-dia-chi-giao-hang/${userName}`;
+          const response = await fetch(api, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          
+          });
+  
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          
+          const data = await response.text();
+          console.log(data);
+          setDiaChiGiaoHang(data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();
+    } else {
+      setDiaChiGiaoHang("");
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(diaChiGiaoHang);
+  }, [diaChiGiaoHang]);
   const handleOk = () => {
     
-    
+    console.log(diaChiGiaoHang)
+   
+   
+
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
@@ -312,14 +364,15 @@ const Cart: React.FC = () => {
               <Input
                 style={{ marginTop: "20px" }}
                 placeholder="Nhập địa chỉ giao hàng"
-                // value={modalText}
-                // onChange={handleInputChange}
+                value={diaChiGiaoHang}
+                onChange={(e) => {
+                  setDiaChiGiaoHang(e.target.value);
+                }}
               />
-
-              {/* Dropdown (Combo box) của Ant Design */}
               <Form.Select
                 style={{ marginTop: "20px" }}
                 aria-label="Chọn hình thức giao hàng"
+                onChange={(e) => handleGiaoHang(e.target.value)}
               > 
                 <option value="">Chọn hình thức giao hàng</option>
                 <option value="1">Giao hàng tận giường</option>
@@ -334,6 +387,12 @@ const Cart: React.FC = () => {
                 <option value="1">Cash</option>
                 <option value="2">Transfer</option>
               </Form.Select>
+              <div className="d-flex justify-content-center" style={{fontSize:'20px', padding:'20px 0px'}}>
+                 <strong> Tổng tiền phí vận chuyển : <span style={{color : "red"}}>{clickGiaoHang}</span> <sup>đ</sup></strong>
+              </div>
+              <div className="d-flex justify-content-center" style={{fontSize:'20px', }}>
+                 <strong> Tổng tiền phải thanh toán : <span style={{color : "red"}}>{totalAmountUpdate}</span> <sup>đ</sup></strong>
+              </div>
             </p>
           </Modal>
         </div>
