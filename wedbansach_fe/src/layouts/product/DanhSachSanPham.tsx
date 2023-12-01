@@ -5,6 +5,7 @@ import { PhanTrang } from "../utils/PhanTrang";
 import { layToanBoSach, timKiemSach } from "../../api/SachAPI";
 import SachModel from "../../models/SachModel";
 import img404 from '../../css/error-404.webp'
+import { Spin } from "antd";
 
 
 interface DanhSachSanPhamProps {
@@ -59,9 +60,9 @@ function DanhSachSanPham({ tuKhoaTimKiem, maTheLoai }: DanhSachSanPhamProps) {
 
     if (dangTaiDuLieu) {
         return (
-            <div>
-                <h1>Đang tải dữ liệu</h1>
-            </div>
+          <div style={{ margin: '80px 0' }}>
+            <Spin size="large" /> 
+          </div>
         );
     }
 

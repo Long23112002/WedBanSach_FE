@@ -29,6 +29,7 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
       console.log("Number of items in the cart:", cartItemsLength);
     }
   }, []);
+  
 
 
   useEffect(() => {
@@ -104,7 +105,7 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid" style={{ margin: "0 20px" }}>
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           Bookstore
         </a>
         <button

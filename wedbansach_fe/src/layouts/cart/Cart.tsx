@@ -18,26 +18,39 @@ export interface CartItem {
   images?: HinHAnhModel[];
 }
 
+interface DiaChi {
+  code: number;
+  name: string;
+}
+
 const Cart: React.FC = () => {
   const [dataCart, setDataCart] = useState<CartItem[]>([]);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("");
-  const [diaChiGiaoHang, setDiaChiGiaoHang] = useState("");
-  const [clickGiaoHang, setclickGiaoHang] = useState<string | undefined>(undefined);
+  const [thanhPhoList, setThanhPhoList] = useState<DiaChi[]>([]);
+  const [quanList, setQuanList] = useState<DiaChi[]>([]);
+  const [huyenList, setHuyenList] = useState<DiaChi[]>([]);
+  const [diaChiGiaoHang, setDiaChiGiaoHang] = useState({
+    thanhPho: "",
+    quan: "",
+    huyen: "",
+    diaChi: "",
+  });
+  const [clickGiaoHang, setclickGiaoHang] = useState<string | undefined>(
+    undefined
+  );
   const [totalAmountUpdate, setTotalAmountUpdate] = useState(0);
-  
+
   const handleGiaoHang = (value: string) => {
-   
-    const giaGiaoHang= value === "1" ? 10000 : 0;
+    const giaGiaoHang = value === "1" ? 10000 : 0;
     setclickGiaoHang(giaGiaoHang.toString());
     const updatedTotalAmount = totalAmount + giaGiaoHang;
     setTotalAmountUpdate(updatedTotalAmount);
   };
-  
 
   const showModal = () => {
-    const cartItems = Cookies.get('cartItems'); 
+    const cartItems = Cookies.get("cartItems");
     if (cartItems && cartItems.length > 0) {
       setOpen(true);
     } else {
@@ -52,59 +65,54 @@ const Cart: React.FC = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           setOpen(false);
-          console.log("long")
+          console.log("long");
         }
       });
     }
   };
 
   useEffect(() => {
-    const userName = localStorage.getItem('user');
-    
+    const userName = localStorage.getItem("user");
+
     if (userName !== null) {
       const fetchData = async () => {
         try {
-          
           const api = `http://localhost:8080/tai-khoan/check-dia-chi-giao-hang/${userName}`;
           const response = await fetch(api, {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-          
           });
-  
+
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
           }
-          
+
           const data = await response.text();
-          console.log(data);
-          setDiaChiGiaoHang(data);
+          // console.log(data);
+          // setDiaChiGiaoHang(data);
         } catch (error) {
           console.log(error);
         }
       };
       fetchData();
     } else {
-      setDiaChiGiaoHang("");
+      // setDiaChiGiaoHang("");
     }
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     console.log(diaChiGiaoHang);
   }, [diaChiGiaoHang]);
   const handleOk = () => {
-    
-    console.log(diaChiGiaoHang)
-   
-   
+    console.log(diaChiGiaoHang);
 
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
-      alert('OK')
+      alert("OK");
     }, 2000);
   };
 
@@ -295,6 +303,49 @@ const Cart: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    fetch("https://provinces.open-api.vn/api/p/")
+      .then((response) => response.json())
+      .then((data) => setThanhPhoList(data))
+      .catch((error) => console.error("Error fetching thành phố:", error));
+  }, []);
+
+  const handleThanhPhoChange = (value: string) => {
+    console.log("Selected Thanh Pho:", value);
+  
+    fetch(`https://provinces.open-api.vn/api/p/${value}?depth=2`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Quan Data:", data);
+  
+        const quanData = data[0]?.districts || [];
+        setQuanList(quanData);
+  
+        setDiaChiGiaoHang((prevState) => ({
+          ...prevState,
+          thanhPho: value,
+          quan: "",
+          huyen: "",
+        }));
+      })
+      .catch((error) => console.error("Error fetching quận:", error));
+  };
+  const handleQuanChange = (value: any) => {
+    fetch(`https://provinces.open-api.vn/api/d/${value}?depth=2`)
+      .then((response) => response.json())
+      .then((data) => {
+        const huyenData = data[0]?.districts || [];
+        setHuyenList(huyenData);
+      })
+      .catch((error) => console.error("Error fetching huyện:", error));
+
+    setDiaChiGiaoHang((prevState) => ({
+      ...prevState,
+      quan: value,
+      huyen: "",
+    }));
+  };
+
   const selectedItems = dataCart.filter((item) => item.selected);
   const totalAmount =
     selectedItems.length > 0
@@ -333,7 +384,11 @@ const Cart: React.FC = () => {
           className="d-flex justify-content-center align-items-center"
         >
           Tổng thanh toán ({selectedItems.length} sản phẩm): {totalAmount} đ
-          <Button style={{margin :"0 20px"}} type="primary" onClick={showModal}>
+          <Button
+            style={{ margin: "0 20px" }}
+            type="primary"
+            onClick={showModal}
+          >
             Thanh toán
           </Button>
           <Modal
@@ -361,37 +416,99 @@ const Cart: React.FC = () => {
                 // value={modalText}
                 // onChange={handleInputChange}
               />
-              <Input
-                style={{ marginTop: "20px" }}
-                placeholder="Nhập địa chỉ giao hàng"
-                value={diaChiGiaoHang}
-                onChange={(e) => {
-                  setDiaChiGiaoHang(e.target.value);
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr ",
+                  gap: "10px",
                 }}
-              />
+              >
+                <Select
+                  style={{ marginTop: "20px" }}
+                  placeholder="Chọn thành phố"
+                  defaultValue={diaChiGiaoHang.thanhPho}
+                  onChange={(value) => handleThanhPhoChange(value)}
+                >
+                  {thanhPhoList.map((thanhPho) => (
+                    <Option key={thanhPho.code}>{thanhPho.name}</Option>
+                  ))}
+                </Select>
+                <Select
+                  style={{ marginTop: "20px" }}
+                  placeholder="Chọn quận"
+                  value={diaChiGiaoHang.quan}
+                  onChange={(value) => handleQuanChange(value)}
+                >
+                  {quanList && quanList.map((quan) => (
+                    <Option key={quan.code}>{quan.name}</Option>
+                  ))}
+                </Select>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "10px",
+                }}
+              >
+                <Input
+                  style={{ marginTop: "20px" }}
+                  placeholder="Chọn huyện"
+                  // value={diaChiGiaoHang}
+                  // setDiaChiGiaoHang(e.target.value);
+                  // }}onChange={(e) => {
+                  //   
+                />
+
+                <Input
+                  style={{ marginTop: "20px" }}
+                  placeholder="Địa chỉ giao hàng"
+                  // value={diaChiGiaoHang}
+                  // onChange={(e) => {
+                  //   setDiaChiGiaoHang(e.target.value);
+                  // }}
+                />
+              </div>
               <Form.Select
                 style={{ marginTop: "20px" }}
                 aria-label="Chọn hình thức giao hàng"
                 onChange={(e) => handleGiaoHang(e.target.value)}
-              > 
+              >
                 <option value="">Chọn hình thức giao hàng</option>
                 <option value="1">Giao hàng tận giường</option>
                 <option value="2">Tự lấy hàng tại cửa hàng</option>
               </Form.Select>
-          
+
               <Form.Select
                 style={{ marginTop: "20px" }}
                 aria-label="Chọn hình thức thanh toán"
-              > 
+              >
                 <option value="">Chọn hình thức thanh toán</option>
                 <option value="1">Cash</option>
                 <option value="2">Transfer</option>
               </Form.Select>
-              <div className="d-flex justify-content-center" style={{fontSize:'20px', padding:'20px 0px'}}>
-                 <strong> Tổng tiền phí vận chuyển : <span style={{color : "red"}}>{clickGiaoHang}</span> <sup>đ</sup></strong>
+              <div
+                className="d-flex justify-content-center"
+                style={{ fontSize: "20px", padding: "20px 0px" }}
+              >
+                <strong>
+                  {" "}
+                  Tổng tiền phí vận chuyển :{" "}
+                  <span style={{ color: "red" }}>{clickGiaoHang}</span>{" "}
+                  <sup>đ</sup>
+                </strong>
               </div>
-              <div className="d-flex justify-content-center" style={{fontSize:'20px', }}>
-                 <strong> Tổng tiền phải thanh toán : <span style={{color : "red"}}>{totalAmountUpdate}</span> <sup>đ</sup></strong>
+              <div
+                className="d-flex justify-content-center"
+                style={{ fontSize: "20px" }}
+              >
+                <strong>
+                  {" "}
+                  Tổng tiền phải thanh toán :{" "}
+                  <span style={{ color: "red" }}>{totalAmountUpdate}</span>{" "}
+                  <sup>đ</sup>
+                </strong>
               </div>
             </p>
           </Modal>
