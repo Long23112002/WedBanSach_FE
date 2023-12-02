@@ -8,6 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Option, Record2 } from "react-bootstrap-icons";
 import { Form } from "react-bootstrap";
+import { log } from "console";
 export interface CartItem {
   maSach?: any;
   tenSach?: any;
@@ -310,7 +311,7 @@ const Cart: React.FC = () => {
       .catch((error) => console.error("Error fetching thành phố:", error));
   }, []);
 
-  const handleThanhPhoChange = (value: string) => {
+  const handleThanhPhoChange = (value: number) => {
     console.log("Selected Thanh Pho:", value);
   
     fetch(`https://provinces.open-api.vn/api/p/${value}?depth=2`)
@@ -318,24 +319,33 @@ const Cart: React.FC = () => {
       .then((data) => {
         console.log("Quan Data:", data);
   
-        const quanData = data[0]?.districts || [];
+        const quanData = data.districts;
+        console.log("Quan Data check:", quanData);
+        
         setQuanList(quanData);
   
         setDiaChiGiaoHang((prevState) => ({
           ...prevState,
-          thanhPho: value,
+          thanhPho: data.name,
           quan: "",
           huyen: "",
         }));
       })
       .catch((error) => console.error("Error fetching quận:", error));
   };
+
+  console.log(diaChiGiaoHang);
+  
+
   const handleQuanChange = (value: any) => {
     fetch(`https://provinces.open-api.vn/api/d/${value}?depth=2`)
       .then((response) => response.json())
       .then((data) => {
-        const huyenData = data[0]?.districts || [];
+        console.log("Quan Data: " +value);
+        const huyenData = data.districts || [];
+        console.log("Huyen Data: " +huyenData);
         setHuyenList(huyenData);
+        
       })
       .catch((error) => console.error("Error fetching huyện:", error));
 
@@ -426,8 +436,14 @@ const Cart: React.FC = () => {
                 <Select
                   style={{ marginTop: "20px" }}
                   placeholder="Chọn thành phố"
-                  defaultValue={diaChiGiaoHang.thanhPho}
                   onChange={(value) => handleThanhPhoChange(value)}
+                  options={
+                    thanhPhoList &&
+                    thanhPhoList.map((thanhPho) => ({
+                      label: thanhPho.name,
+                      value: thanhPho.code,
+                    }))
+                  }
                 >
                   {thanhPhoList.map((thanhPho) => (
                     <Option key={thanhPho.code}>{thanhPho.name}</Option>
