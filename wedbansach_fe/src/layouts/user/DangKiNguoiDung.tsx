@@ -85,7 +85,7 @@ function DangKyNguoiDung() {
       isMatKhauLapLaiValid
     ) {
       try {
-        const url = "http://localhost:8080/tai-khoan/dang-ky";
+        const url = "https://wedbansachbackend-production.up.railway.app/tai-khoan/dang-ky";
 
         const response = await fetch(url, {
           method: "POST",
@@ -134,7 +134,7 @@ function DangKyNguoiDung() {
   // KIỂM TRA TÊN ĐĂNG NHẬP ////////////////////////////////////////////////
   const kiemTraTenDangNhapDaTonTai = async (tenDangNhap: string) => {
     // end-point
-    const url = `http://localhost:8080/nguoi-dung/search/existsByTenDangNhap?tenDangNhap=${tenDangNhap}`;
+    const url = `https://wedbansachbackend-production.up.railway.app/nguoi-dung/search/existsByTenDangNhap?tenDangNhap=${tenDangNhap}`;
     console.log(url);
     try {
       const response = await fetch(url);
@@ -164,7 +164,7 @@ function DangKyNguoiDung() {
   // KIỂM TRA TÊN ĐĂNG NHẬP ////////////////////////////////////////////////
   const kiemTraEmailDaTonTai = async (email: string) => {
     // end-point
-    const url = `http://localhost:8080/nguoi-dung/search/existsByEmail?email=${email}`;
+    const url = `https://wedbansachbackend-production.up.railway.app/nguoi-dung/search/existsByEmail?email=${email}`;
     console.log(url);
     // call api
     try {

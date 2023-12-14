@@ -17,7 +17,7 @@ const SachForm: React.FC = () => {
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
         const token = localStorage.getItem('token');
-        fetch(  'http://localhost:8080/sach',
+        fetch(  'https://wedbansachbackend-production.up.railway.app/sach',
             {
                 method: 'POST',
                 headers: {

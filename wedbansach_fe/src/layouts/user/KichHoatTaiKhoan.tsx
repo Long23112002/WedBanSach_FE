@@ -20,7 +20,7 @@ function KichHoatTaiKhoan() {
     console.log("Email:", email);
     console.log("MaKichHoat:", maKichHoat);
     try {
-      const url: string = `http://localhost:8080/tai-khoan/kich-hoat?email=${email}&maKichHoat=${maKichHoat}`;
+      const url: string = `https://wedbansachbackend-production.up.railway.app/tai-khoan/kich-hoat?email=${email}&maKichHoat=${maKichHoat}`;
       const response = await fetch(url, { method: "GET" });
 
       if (response.ok) {

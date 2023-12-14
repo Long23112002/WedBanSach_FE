@@ -49,14 +49,14 @@ async function layAnhCuaMotSach(duongDan: string): Promise<HinHAnhModel[]> {
 
 export async function layToanBoAnhCuaMotSach(maSach: number): Promise<HinHAnhModel[]> {
     // Xác định endpoint
-    const duongDan: string = `http://localhost:8080/sach/${maSach}/danhSachHinhAnh`;
+    const duongDan: string = `https://wedbansachbackend-production.up.railway.app/sach/${maSach}/danhSachHinhAnh`;
  
     return layAnhCuaMotSach(duongDan);
  }
 
  export async function lay1AnhCuaMotSach(maSach: number): Promise<HinHAnhModel[]> {
     // Xác định endpoint
-    const duongDan: string = `http://localhost:8080/sach/${maSach}/danhSachHinhAnh?sort=maHinhAnh,asc&page=0&size=1`;
+    const duongDan: string = `https://wedbansachbackend-production.up.railway.app/sach/${maSach}/danhSachHinhAnh?sort=maHinhAnh,asc&page=0&size=1`;
 
     return layAnhCuaMotSach(duongDan);
 }
@@ -64,7 +64,7 @@ export async function layToanBoAnhCuaMotSach(maSach: number): Promise<HinHAnhMod
 
 export async function layToanBoDanhGiaCuaMotSach(maSach: number): Promise<DanhGiaModel[]> {
    // Xác định endpoint
-   const duongDan: string = `http://localhost:8080/sach/${maSach}/danhSachSuDanhGia`;
+   const duongDan: string = `https://wedbansachbackend-production.up.railway.app/sach/${maSach}/danhSachSuDanhGia`;
 
    return layDanhGiaCuaMotSach(duongDan);
 }
@@ -72,7 +72,7 @@ export async function layToanBoDanhGiaCuaMotSach(maSach: number): Promise<DanhGi
 
 export async function lay1DanhGiaCuaMotSach(maSach: number): Promise<DanhGiaModel[]> {
     // Xác định endpoint
-    const duongDan: string = `http://localhost:8080/sach/${maSach}/danhSachSuDanhGia?sort=maDanhGia,asc&page=0&size=1`;
+    const duongDan: string = `https://wedbansachbackend-production.up.railway.app/sach/${maSach}/danhSachSuDanhGia?sort=maDanhGia,asc&page=0&size=1`;
  
     return layDanhGiaCuaMotSach(duongDan);
  }
