@@ -22,17 +22,17 @@ function App() {
       <BrowserRouter>
         <Navbar tuKhoaTimKiem={tuKhoaTimKiem}  setTuKhoaTimKiem={setTuKhoaTimKiem}/>
         <Routes>
-             <Route path='/' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
-             <Route path='/:maTheLoai' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
-             <Route path='/about' element={<About />} />
-             <Route path='/sach/:maSach' element={<ChiTietSanPham />} />
-             <Route path='/dang-ky' element={<DangKyNguoiDung />} />
-             <Route path='/kich-hoat/:email/:maKichHoat' element={<KichHoatTaiKhoan/>} />
-             <Route path='/dang-nhap' element={<DangNhap />} />
-             <Route path='/test' element={<Test />} />
-             <Route path='/admin/them-sach' element={<SachForm />} />
-             <Route path='/cart' element = {<Cart/>} />
-             <Route path='/ho-so-ca-nhan' element={<HoSoCaNhan/>} />
+             <Route path='/WedBanSach_FE' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
+             <Route path='/WedBanSach_FE/:maTheLoai' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
+             <Route path='/WedBanSach_FE/about' element={<About />} />
+             <Route path='/WedBanSach_FE/sach/:maSach' element={<ChiTietSanPham />} />
+             <Route path='/WedBanSach_FE/dang-ky' element={<DangKyNguoiDung />} />
+             <Route path='/WedBanSach_FE/kich-hoat/:email/:maKichHoat' element={<KichHoatTaiKhoan/>} />
+             <Route path='/WedBanSach_FE/dang-nhap' element={<DangNhap />} />
+             <Route path='/WedBanSach_FE/test' element={<Test />} />
+             <Route path='/WedBanSach_FE/admin/them-sach' element={<SachForm />} />
+             <Route path='/WedBanSach_FE/cart' element = {<Cart/>} />
+             <Route path='/WedBanSach_FE/ho-so-ca-nhan' element={<HoSoCaNhan/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>
