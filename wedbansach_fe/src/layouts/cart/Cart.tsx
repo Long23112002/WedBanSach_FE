@@ -82,7 +82,7 @@ const Cart: React.FC = () => {
     if (userName !== null) {
       const fetchData = async () => {
         try {
-          const api = `http://localhost:8080/tai-khoan/check-dia-chi-giao-hang/${userName}`;
+          const api = `https://wedbansachbackend-production.up.railway.app/tai-khoan/check-dia-chi-giao-hang/${userName}`;
           const response = await fetch(api, {
             method: "GET",
             headers: {
@@ -129,7 +129,7 @@ const Cart: React.FC = () => {
     console.log(requestData);
     try {
       const response = await fetch(
-        "http://localhost:8080/don-hang/them-don-hang",
+        "https://wedbansachbackend-production.up.railway.app/don-hang/them-don-hang",
         {
           method: "POST",
           headers: {

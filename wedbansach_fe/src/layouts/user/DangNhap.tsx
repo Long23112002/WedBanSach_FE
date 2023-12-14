@@ -40,7 +40,7 @@ const DangNhap = () => {
       password: password,
     };
 
-    fetch("http://localhost:8080/tai-khoan/dang-nhap", {
+    fetch("https://wedbansachbackend-production.up.railway.app/tai-khoan/dang-nhap", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
