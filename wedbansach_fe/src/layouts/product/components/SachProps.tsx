@@ -8,6 +8,7 @@ import SachModel from "../../../models/SachModel";
 import { Button, Modal } from "antd";
 import Cookies from "js-cookie";
 import { laySachTheoMaSach } from "../../../api/SachAPI";
+import Swal from "sweetalert2";
 
 interface SachPropsInterface {
   sach: SachModel;
@@ -60,13 +61,28 @@ const SachProps: React.FC<SachPropsInterface> = (props) => {
 
         if (existingCartItemIndex !== -1) {
           updatedCartItems[existingCartItemIndex].soLuong += 1;
+          Swal.fire({
+            icon: 'success',
+            title: 'Added to Cart',
+            text: 'Thêm giỏ hàng thành công!',
+          });
         } else {
           updatedCartItems.push({
             ...productDetails,
             images,
             soLuong: 1,
           });
+          Swal.fire({
+            icon: 'success',
+            title: 'Added to Cart',
+            text: 'Thêm giỏ hàng thành công!',
+          });
         }
+        Swal.fire({
+          icon: 'success',
+          title: 'Added to Cart',
+          text: 'Thêm giỏ hàng thành công!',
+        });
 
         Cookies.set("cartItems", JSON.stringify(updatedCartItems));
         setCartItems(updatedCartItems);

@@ -29,9 +29,12 @@ const Cart: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("");
+  const [soDienThoaiGH, setSoDienThoaiGH] = useState<string>("");
   const [thanhPhoList, setThanhPhoList] = useState<DiaChi[]>([]);
   const [quanList, setQuanList] = useState<DiaChi[]>([]);
   const [huyenList, setHuyenList] = useState<DiaChi[]>([]);
+  const [shipValue, setShipValue] = useState<string>("");
+  const [hinhThucThanhToan, setHinhThucThanhToan] = useState<string>("");
   const [diaChiGiaoHang, setDiaChiGiaoHang] = useState({
     thanhPho: "",
     quan: "",
@@ -44,6 +47,7 @@ const Cart: React.FC = () => {
   const [totalAmountUpdate, setTotalAmountUpdate] = useState(0);
 
   const handleGiaoHang = (value: string) => {
+    setShipValue(value);
     const giaGiaoHang = value === "1" ? 10000 : 0;
     setclickGiaoHang(giaGiaoHang.toString());
     const updatedTotalAmount = totalAmount + giaGiaoHang;
@@ -106,14 +110,53 @@ const Cart: React.FC = () => {
   useEffect(() => {
     console.log(diaChiGiaoHang);
   }, [diaChiGiaoHang]);
-  const handleOk = () => {
-    console.log(diaChiGiaoHang);
 
+  const handleOk = async () => {
+    const requestData = {
+      diaChiGiaoHang: {
+        ...diaChiGiaoHang,
+        diaChiNhanHang: `${diaChiGiaoHang.thanhPho} ${diaChiGiaoHang.quan} ${diaChiGiaoHang.huyen}`, 
+      },
+      tongTien: totalAmount,
+      tongSanPham: selectedItems.length,
+      hinhThucGiaoHang: shipValue,
+      hinhThucThanhToan: hinhThucThanhToan,
+      maNguoiDung: 1,
+      soDienThoaiGiaoHang: soDienThoaiGH,
+      chiPhiThanhToan: totalAmountUpdate,
+      chiPhiGiaoHang: clickGiaoHang,
+    };
+    console.log(requestData);
+    try {
+      const response = await fetch(
+        "http://localhost:8080/don-hang/them-don-hang",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+      console.log(requestData)
+      if (!response.ok) {
+        console.error("Error:", response.statusText);
+        return;
+      }
+      setTimeout(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Payment Successful',
+          text: 'Thanh toán thành công',
+        });
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+    }
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
-      alert("OK");
     }, 2000);
   };
 
@@ -313,17 +356,17 @@ const Cart: React.FC = () => {
 
   const handleThanhPhoChange = (value: number) => {
     console.log("Selected Thanh Pho:", value);
-  
+
     fetch(`https://provinces.open-api.vn/api/p/${value}?depth=2`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Quan Data:", data);
-  
+
         const quanData = data.districts;
         console.log("Quan Data check:", quanData);
-        
+
         setQuanList(quanData);
-  
+
         setDiaChiGiaoHang((prevState) => ({
           ...prevState,
           thanhPho: data.name,
@@ -335,24 +378,29 @@ const Cart: React.FC = () => {
   };
 
   console.log(diaChiGiaoHang);
-  
 
   const handleQuanChange = (value: any) => {
     fetch(`https://provinces.open-api.vn/api/d/${value}?depth=2`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Quan Data: " +value);
-        const huyenData = data.districts || [];
-        console.log("Huyen Data: " +huyenData);
+        console.log(value + "");
+        console.log("Quan Data: " + value);
+        const huyenData = data.wards;
         setHuyenList(huyenData);
-        
+        setDiaChiGiaoHang((prevState) => ({
+          ...prevState,
+          quan: data.name,
+          huyen: "",
+        }));
       })
       .catch((error) => console.error("Error fetching huyện:", error));
+  };
 
+  const handleChangeCBX = (value: any) => {
+    console.log(value);
     setDiaChiGiaoHang((prevState) => ({
       ...prevState,
-      quan: value,
-      huyen: "",
+      huyen: huyenList[value].name,
     }));
   };
 
@@ -423,8 +471,8 @@ const Cart: React.FC = () => {
               <Input
                 style={{ marginTop: "20px" }}
                 placeholder="Số điện thoại người nhận"
-                // value={modalText}
-                // onChange={handleInputChange}
+                value={soDienThoaiGH}
+                onChange={(e) => setSoDienThoaiGH(e.target.value)}
               />
               <div
                 style={{
@@ -455,9 +503,10 @@ const Cart: React.FC = () => {
                   value={diaChiGiaoHang.quan}
                   onChange={(value) => handleQuanChange(value)}
                 >
-                  {quanList && quanList.map((quan) => (
-                    <Option key={quan.code}>{quan.name}</Option>
-                  ))}
+                  {quanList &&
+                    quanList.map((quan) => (
+                      <Option key={quan.code}>{quan.name}</Option>
+                    ))}
                 </Select>
               </div>
 
@@ -468,22 +517,28 @@ const Cart: React.FC = () => {
                   gap: "10px",
                 }}
               >
-                <Input
+                <Select
                   style={{ marginTop: "20px" }}
-                  placeholder="Chọn huyện"
-                  // value={diaChiGiaoHang}
-                  // setDiaChiGiaoHang(e.target.value);
-                  // }}onChange={(e) => {
-                  //   
-                />
+                  placeholder="Chọn phường"
+                  value={diaChiGiaoHang.huyen}
+                  onChange={handleChangeCBX}
+                >
+                  {huyenList &&
+                    huyenList.map((huyen) => (
+                      <Option key={huyen.code}>{huyen.name}</Option>
+                    ))}
+                </Select>
 
                 <Input
                   style={{ marginTop: "20px" }}
                   placeholder="Địa chỉ giao hàng"
-                  // value={diaChiGiaoHang}
-                  // onChange={(e) => {
-                  //   setDiaChiGiaoHang(e.target.value);
-                  // }}
+                  value={diaChiGiaoHang.diaChi}
+                  onChange={(e) => {
+                    setDiaChiGiaoHang((prevState) => ({
+                      ...prevState,
+                      diaChi: e.target.value,
+                    }));
+                  }}
                 />
               </div>
               <Form.Select
@@ -499,6 +554,7 @@ const Cart: React.FC = () => {
               <Form.Select
                 style={{ marginTop: "20px" }}
                 aria-label="Chọn hình thức thanh toán"
+                onChange={(e) => setHinhThucThanhToan(e.target.value)}
               >
                 <option value="">Chọn hình thức thanh toán</option>
                 <option value="1">Cash</option>
@@ -511,7 +567,8 @@ const Cart: React.FC = () => {
                 <strong>
                   {" "}
                   Tổng tiền phí vận chuyển :{" "}
-                  <span style={{ color: "red" }}>{clickGiaoHang}</span>{" "}
+                  <span style={{ color: "red" }}>{clickGiaoHang ? clickGiaoHang : 0}</span>
+                  {""}
                   <sup>đ</sup>
                 </strong>
               </div>

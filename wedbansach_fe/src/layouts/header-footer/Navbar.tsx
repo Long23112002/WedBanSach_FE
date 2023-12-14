@@ -28,7 +28,7 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
       setSoLuongCart(cartItemsLength);
       console.log("Number of items in the cart:", cartItemsLength);
     }
-  }, []);
+  }, [cartItems]);
   
 
 
@@ -39,8 +39,6 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
   }, [cartItems]);
 
 
-
-  // lấy token từ localStorage
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
