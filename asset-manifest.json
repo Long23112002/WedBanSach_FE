@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/WedBanSach_FE/static/css/main.c6a0dca2.css",
-    "main.js": "/WedBanSach_FE/static/js/main.6a3a366c.js",
+    "main.js": "/WedBanSach_FE/static/js/main.e612ad6e.js",
     "static/media/error-404.webp": "/WedBanSach_FE/static/media/error-404.c0ca51d921b335dd5e31.webp",
     "index.html": "/WedBanSach_FE/index.html",
     "main.c6a0dca2.css.map": "/WedBanSach_FE/static/css/main.c6a0dca2.css.map",
-    "main.6a3a366c.js.map": "/WedBanSach_FE/static/js/main.6a3a366c.js.map"
+    "main.e612ad6e.js.map": "/WedBanSach_FE/static/js/main.e612ad6e.js.map"
   },
   "entrypoints": [
     "static/css/main.c6a0dca2.css",
-    "static/js/main.6a3a366c.js"
+    "static/js/main.e612ad6e.js"
   ]
 }
