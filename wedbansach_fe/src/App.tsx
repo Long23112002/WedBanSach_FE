@@ -22,7 +22,7 @@ function App() {
       <BrowserRouter>
         <Navbar tuKhoaTimKiem={tuKhoaTimKiem}  setTuKhoaTimKiem={setTuKhoaTimKiem}/>
         <Routes>
-             <Route path='/WedBanSach_FE' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
+             <Route index={true} path='/WedBanSach_FE' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
              <Route path='/WedBanSach_FE/:maTheLoai' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
              <Route path='/WedBanSach_FE/about' element={<About />} />
              <Route path='/WedBanSach_FE/sach/:maSach' element={<ChiTietSanPham />} />

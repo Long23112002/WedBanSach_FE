@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import { Search } from "react-bootstrap-icons";
-import { NavLink } from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import type { MenuProps } from "antd";
 import { Badge, Dropdown, Space } from "antd";
 import { jwtDecode } from "jwt-decode";
@@ -57,11 +57,11 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
   };
   const items: MenuProps["items"] = [
     {
-      label: <a href="/dang-nhap">Đăng Nhập</a>,
+      label: <Link to="WedBanSach_FE/dang-nhap">Đăng Nhập</Link>,
       key: "0",
     },
     {
-      label: <a href="/dang-ky">Đăng ký</a>,
+      label: <Link to="WedBanSach_FE/dang-ky">Đăng ký</Link>,
       key: "1",
     },
     {
@@ -86,9 +86,9 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
     },
     {
       label: (
-        <a href="/" onClick={handelDangXuat}>
+        <Link to="/WedBanSach_FE" onClick={handelDangXuat}>
           Đăng Xuất
-        </a>
+        </Link>
       ),
       key: "1",
     },
@@ -103,7 +103,7 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid" style={{ margin: "0 20px" }}>
-        <a className="navbar-brand" href="/">
+        <a className="navbar-brand" href="/WedBanSach_FE">
           Bookstore
         </a>
         <button
@@ -121,7 +121,7 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <NavLink className="nav-link active" aria-current="page" to="/">
+              <NavLink className="nav-link active" aria-current="page" to="/WedBanSach_FE">
                 Trang chủ
               </NavLink>
             </li>
@@ -216,7 +216,7 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
           <li className="nav-item">
 
             <Badge count={soLuongCart}>
-              <a className="nav-link" href="/cart">
+              <a className="nav-link" href="WedBanSach_FE/cart">
                 <i className="fas fa-shopping-cart"></i>
               </a>
             </Badge>
